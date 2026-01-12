@@ -23,6 +23,7 @@
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600&family=Poppins:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
+	<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -1165,8 +1166,128 @@ body {
   55%  { transform: scale(1.28); }
   100% { transform: scale(1.16); }
 }
+const pomoSound = new Audio("pomodoro-ding.mp3");
+pomoSound.volume = 0.6; // soft, ikkje stress
 
-  </style>
+/* 🍅 Pomodoro – Sunrise Pro screen */
+.pomo-wrap{position:relative;margin-top:14px;padding:18px;border-radius:26px;background:rgba(255,255,255,.68);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 30px 90px rgba(205,115,164,.30),0 0 0 1px rgba(255,255,255,.55) inset;overflow:hidden;}
+.pomo-wrap::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.92) 0%, rgba(255,255,255,.70) 28%, rgba(255,255,255,0) 60%),radial-gradient(circle at 20% 15%, rgba(255,122,190,.25) 0%, rgba(255,122,190,0) 55%),radial-gradient(circle at 85% 25%, rgba(255,176,102,.22) 0%, rgba(255,176,102,0) 60%),radial-gradient(circle at 70% 85%, rgba(255,96,171,.18) 0%, rgba(255,96,171,0) 55%);filter:blur(10px);pointer-events:none;}
+.pomo-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.pomo-title{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;font-size:18px;}
+.pomo-mode{font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.6);color:rgba(40,40,40,.72);box-shadow:0 10px 30px rgba(205,115,164,.15);}
+.pomo-quote{position:relative;text-align:center;margin:6px 0 14px;line-height:1;user-select:none;}
+.pomo-quote .inmy{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:.16em;font-size:42px;opacity:.92;}
+.pomo-quote .success{font-family:"Snell Roundhand","Apple Chancery","Zapfino",cursive;font-weight:500;font-size:42px;display:block;margin-top:6px;opacity:.90;}
+.pomo-quote .era{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:.14em;font-size:42px;display:block;margin-top:4px;opacity:.92;}
+.pomo-center{position:relative;display:flex;align-items:center;justify-content:center;padding:18px 0 10px;}
+.pomo-ring{position:relative;width:250px;height:250px;border-radius:999px;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.92) 0%, rgba(255,255,255,.78) 45%, rgba(255,255,255,.55) 100%);box-shadow:0 40px 110px rgba(205,115,164,.26),0 10px 35px rgba(255,176,102,.18),0 0 0 1px rgba(255,255,255,.65) inset;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.pomo-ring::before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle, rgba(0,0,0,.06) 0 1px, transparent 2px) 0 0 / 6px 6px;opacity:.08;transform:rotate(12deg);pointer-events:none;}
+.pomo-progress{position:absolute;inset:10px;border-radius:999px;background:conic-gradient(rgba(255,96,171,.85) var(--pomo-deg, 0deg),rgba(255,255,255,.0) 0);mask:radial-gradient(circle at 50% 50%, transparent 64%, #000 65%);-webkit-mask:radial-gradient(circle at 50% 50%, transparent 64%, #000 65%);opacity:.55;filter:blur(.2px);}
+.pomo-time{position:relative;text-align:center;}
+.pomo-time .time{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:700;font-size:56px;letter-spacing:.02em;color:rgba(30,30,30,.86);}
+.pomo-time .sub{margin-top:6px;font-size:13px;color:rgba(40,40,40,.58);}
+.pomo-controls{position:relative;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+.pomo-btn{border:0;cursor:pointer;padding:12px 16px;border-radius:999px;font-weight:700;letter-spacing:.2px;box-shadow:0 18px 45px rgba(205,115,164,.22);transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;}
+.pomo-btn:active{transform:scale(.98);}
+.pomo-btn.primary{color:rgba(40,40,40,.88);background:linear-gradient(135deg, rgba(255,96,171,.65), rgba(255,176,102,.65));border:1px solid rgba(255,255,255,.55);}
+.pomo-btn.ghost{color:rgba(40,40,40,.70);background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.62);}
+.pomo-mini{position:relative;display:flex;gap:10px;justify-content:center;margin-top:10px;font-size:12px;color:rgba(40,40,40,.62);}
+.pomo-mini .chip{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);}
+.pomo-bounce{animation:pomoPop .38s cubic-bezier(.2,1.4,.2,1) both;}
+@keyframes pomoPop{0%{transform:scale(.92);filter:saturate(1);}55%{transform:scale(1.06);filter:saturate(1.06);}100%{transform:scale(1);}}
+@media (max-width:520px){.pomo-ring{width:220px;height:220px;}.pomo-time .time{font-size:50px;}.pomo-quote .inmy,.pomo-quote .success,.pomo-quote .era{font-size:36px;}}
+
+/* Pomodoro timer font */
+.pomo-time .time {
+  font-family: 'Fredoka', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+/* ===== Pomodoro – Sunrise skin (matchar appen) ===== */
+#pro-pomodoro-card.section-card,
+#pro-pomodoro-card {
+  /* same glassy vibe som resten */
+  background: linear-gradient(
+      135deg,
+      rgba(255, 245, 252, 0.82),
+      rgba(255, 244, 235, 0.76)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 24px 70px rgba(206, 120, 170, 0.35),
+    0 12px 40px rgba(255, 170, 120, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Headerchips (Work • 25:00) litt meir “peach” */
+#pro-pomodoro-card .pomo-mode {
+  background: linear-gradient(135deg,
+    rgba(255, 214, 235, 0.75),
+    rgba(255, 206, 170, 0.65)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: rgba(60, 35, 55, 0.9);
+}
+
+/* Midten: “stillhet” – roleg soft sirkel bak tida */
+#pro-pomodoro-card .pomo-ring {
+  background: radial-gradient(circle at 50% 40%,
+    rgba(255,255,255,0.92) 0%,
+    rgba(255,255,255,0.86) 45%,
+    rgba(255,255,255,0.70) 70%,
+    rgba(255,255,255,0.00) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.55),
+    0 18px 50px rgba(210, 120, 175, 0.25),
+    0 10px 30px rgba(255, 170, 120, 0.18);
+}
+
+/* Progress-farge: sunrise (rosa->peach->gul) */
+#pro-pomodoro-card .pomo-progress {
+  background: conic-gradient(
+    from 180deg,
+    rgba(255, 100, 170, 0.95),
+    rgba(255, 160, 120, 0.95),
+    rgba(255, 210, 120, 0.95),
+    rgba(255, 100, 170, 0.95)
+  );
+  filter: blur(0px);
+  opacity: 0.95;
+}
+
+/* Timer-typografi: litt mørkare + “soft ink” */
+#pro-pomodoro-card #pomoTime {
+  color: rgba(25, 18, 28, 0.92);
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* Knappane: mindre grå, meir sunrise */
+#pro-pomodoro-card .pomo-btn.primary {
+  background: linear-gradient(135deg,
+    rgba(255, 120, 185, 0.92),
+    rgba(255, 170, 120, 0.88)
+  );
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow: 0 12px 26px rgba(255, 120, 185, 0.25);
+  color: rgba(35, 18, 25, 0.95);
+}
+#pro-pomodoro-card .pomo-btn.ghost {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: rgba(45, 25, 40, 0.9);
+}
+
+/* Chips nede: matchar glass */
+#pro-pomodoro-card .chip {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.55);
+  color: rgba(50, 28, 44, 0.9);
+}
+
+</style>
 </head>
 <body>
   <div class="app">
@@ -1347,7 +1468,7 @@ body {
               </div>
               <div class="pro-price-row">
                 <div class="pro-price-main">
-                  79 kr<span>/ year</span>
+                  29 kr<span>/ month</span>
                 </div>
                 <div class="pro-price-sub">
                   (Future idea – for when Sunrise goes to the App Store ✨)
@@ -1814,7 +1935,7 @@ if (task.completed) {
 
           const label = document.createElement("div");
           label.className = "countdown-label";
-          label.textContent = diff >= 0 ? "dager igjen" : "dager siden";
+          label.textContent = diff >= 0 ? "days left" : "days ago";
 
           right.appendChild(days);
           right.appendChild(label);
@@ -2141,5 +2262,320 @@ if (task.completed) {
       applyHashTab();
     });
   </script>
+<section class="section-card" id="pro-pomodoro-card" data-tab="pro" style="display:none;">
+  <div class="pomo-wrap">
+    <div class="pomo-head">
+      <div class="pomo-title">🍅 Pomodoro</div>
+      <div class="pomo-mode" id="pomoModeLabel">Work • 25:00</div>
+    </div>
+
+    <div class="pomo-center">
+      <div class="pomo-ring" id="pomoRing">
+        <div class="pomo-progress" id="pomoProgress"></div>
+        <div class="pomo-time">
+          <div class="time" id="pomoTime">25:00</div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="pomo-controls">
+      <button class="pomo-btn primary" id="pomoStartBtn">Start</button>
+      <button class="pomo-btn ghost" id="pomoResetBtn">Reset</button>
+      <button class="pomo-btn ghost" id="pomoSkipBtn">Skip</button>
+    </div>
+
+    <div class="pomo-mini">
+      <div class="chip" id="pomoCycleChip">Cycle: 1/4</div>
+      <div class="chip" id="pomoSoundChip">Sound: Off</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  // =========================
+  // 🍅 Sunrise Pomodoro (PRO)
+  // Script-only block (paste inside <script>)
+  // =========================
+
+  const POMODORO_SOUND_PATH = "pomodoro-ding.mp3"; // same folder as index.html
+  // If you put it in a folder: "sounds/pomodoro-ding.mp3"
+
+  // ---- Helpers
+  const $ = (sel) => document.querySelector(sel);
+  const byId = (id) => document.getElementById(id);
+
+  function fmt(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  }
+
+  function safeText(el, text) {
+    if (el) el.textContent = text;
+  }
+
+  // ---- Try to show Pomodoro when Pro tab is selected
+  function wireProTabShow(card) {
+    if (!card) return;
+
+    const show = () => {
+      // Don’t force hide anything else; just ensure Pomodoro can be seen.
+      card.style.display = "";
+    };
+
+    // Common patterns
+    const proBtn =
+      $('[data-tab-btn="pro"]') ||
+      $('button[data-tab="pro"]') ||
+      $('.tab[data-tab="pro"]') ||
+      $('#tab-pro') ||
+      $('a[href="#pro"]');
+
+    if (proBtn) {
+      proBtn.addEventListener("click", () => {
+        // Some tab systems hide/show in the same tick – delay makes it reliable.
+        setTimeout(show, 0);
+      });
+    }
+
+    // Hash-based tabs (#pro)
+    const onHash = () => {
+      const h = (window.location.hash || "").replace("#", "").toLowerCase();
+      if (h === "pro") show();
+    };
+    window.addEventListener("hashchange", onHash);
+    onHash();
+  }
+
+  // ---- Audio: mp3 end sound + iOS unlock
+  function makeEndSound(path) {
+    const audio = new Audio(path);
+    audio.preload = "auto";
+    audio.volume = 0.65;
+
+    let unlocked = false;
+
+    async function unlock() {
+      if (unlocked) return true;
+      try {
+        // iOS needs a user gesture to allow audio play.
+        audio.currentTime = 0;
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+        unlocked = true;
+        return true;
+      } catch (e) {
+        // Still locked – that’s fine, we’ll try again on the next user click.
+        return false;
+      }
+    }
+
+    async function play() {
+      try {
+        audio.currentTime = 0;
+        await audio.play();
+      } catch (e) {
+        // If locked, it just won't play. We'll rely on unlock() from user clicks.
+      }
+    }
+
+    return { audio, unlock, play };
+  }
+
+  // ---- Main init
+  function PomodoroInit() {
+    const card = byId("pro-pomodoro-card");
+    if (!card) return;
+
+    wireProTabShow(card);
+
+    // Elements
+    const modeLabel = byId("pomoModeLabel");
+    const timeEl = byId("pomoTime");
+    const progressEl = byId("pomoProgress");
+
+    const startBtn = byId("pomoStartBtn");
+    const resetBtn = byId("pomoResetBtn");
+    const skipBtn = byId("pomoSkipBtn");
+
+    const cycleChip = byId("pomoCycleChip");
+    const soundChip = byId("pomoSoundChip");
+
+    // Hard requirements (don’t crash app if missing)
+    if (!timeEl || !startBtn || !resetBtn || !skipBtn) {
+      console.log("Pomodoro: missing core elements (time/buttons).");
+      return;
+    }
+
+    // Settings (v1)
+    const WORK_SEC = 25 * 60;
+    const SHORT_BREAK_SEC = 5 * 60;
+    const LONG_BREAK_SEC = 15 * 60;
+    const CYCLES_BEFORE_LONG = 4;
+
+    // State
+    let phase = "work"; // "work" | "short" | "long"
+    let cycle = 1; // 1..4
+    let remaining = WORK_SEC;
+    let running = false;
+    let timer = null;
+
+    let soundEnabled = false;
+
+    const endSound = makeEndSound(POMODORO_SOUND_PATH);
+
+    function currentTotal() {
+      if (phase === "work") return WORK_SEC;
+      if (phase === "short") return SHORT_BREAK_SEC;
+      return LONG_BREAK_SEC;
+    }
+
+    function phaseLabel() {
+      if (phase === "work") return `Work • ${fmt(WORK_SEC)}`;
+      if (phase === "short") return `Break • ${fmt(SHORT_BREAK_SEC)}`;
+      return `Long break • ${fmt(LONG_BREAK_SEC)}`;
+    }
+
+    function setProgress() {
+      if (!progressEl) return;
+      const total = currentTotal();
+      const done = total - remaining;
+      const pct = total > 0 ? done / total : 0;
+      const deg = Math.max(0, Math.min(1, pct)) * 360;
+      progressEl.style.setProperty("--pomo-deg", `${deg}deg`);
+    }
+
+    function render() {
+      safeText(timeEl, fmt(remaining));
+      safeText(modeLabel, phaseLabel());
+      safeText(cycleChip, `Cycle: ${cycle}/${CYCLES_BEFORE_LONG}`);
+      safeText(soundChip, `Sound: ${soundEnabled ? "On" : "Off"}`);
+      safeText(startBtn, running ? "Pause" : "Start");
+      setProgress();
+    }
+
+    async function playEndSound() {
+      if (!soundEnabled) return;
+      await endSound.play();
+    }
+
+    function nextPhase() {
+      // Work -> Break
+      if (phase === "work") {
+        if (cycle === CYCLES_BEFORE_LONG) {
+          phase = "long";
+          remaining = LONG_BREAK_SEC;
+        } else {
+          phase = "short";
+          remaining = SHORT_BREAK_SEC;
+        }
+        return;
+      }
+
+      // Break -> Work
+      if (phase === "long") {
+        cycle = 1;
+      } else {
+        cycle = Math.min(CYCLES_BEFORE_LONG, cycle + 1);
+      }
+      phase = "work";
+      remaining = WORK_SEC;
+    }
+
+    function stop() {
+      running = false;
+      if (timer) clearInterval(timer);
+      timer = null;
+      render();
+    }
+
+    async function start() {
+      if (running) return;
+      running = true;
+
+      // Try to unlock audio on a user gesture (Start click counts)
+      await endSound.unlock();
+
+      render();
+
+      timer = setInterval(async () => {
+        remaining -= 1;
+
+        if (remaining <= 0) {
+          remaining = 0;
+          render();
+
+          // Ding at end
+          await playEndSound();
+
+          // Move to next phase, but stay paused (nice UX)
+          stop();
+          nextPhase();
+          render();
+          return;
+        }
+
+        render();
+      }, 1000);
+    }
+
+    function toggleStart() {
+      if (running) stop();
+      else start();
+    }
+
+    function reset() {
+      stop();
+      // Keep cycle as-is or reset to 1 — your choice.
+      // This feels clean for v1:
+      phase = "work";
+      remaining = WORK_SEC;
+      render();
+    }
+
+    async function skip() {
+      // Skips immediately to next phase
+      stop();
+      await endSound.unlock(); // user gesture, helps on iOS
+      nextPhase();
+      render();
+    }
+
+    // Events
+    startBtn.addEventListener("click", toggleStart);
+    resetBtn.addEventListener("click", reset);
+    skipBtn.addEventListener("click", skip);
+
+    if (soundChip) {
+  soundChip.addEventListener("click", async () => {
+    soundEnabled = !soundEnabled;
+
+    // Unlock audio silently on user gesture (important for iOS)
+    await endSound.unlock();
+
+    // No sound here – toggle should be silent
+    render();
+  });
+}
+
+    // First paint
+    render();
+    console.log("🍅 Pomodoro ready");
+  }
+
+  // Init when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", PomodoroInit);
+  } else {
+    PomodoroInit();
+  }
+})();
+
+
+</script>
+
 </body>
 </html>
